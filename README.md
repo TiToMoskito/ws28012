@@ -1,6 +1,6 @@
 # WS2812
 
-### Installing WS2812
+### Installing
 Please open a SSH shell. You do not need to use a root shell to install ws2812. If a normal unprivilidged user exists you should start the installation with this user. 
 
 Then execute
