@@ -1,5 +1,7 @@
 ﻿using Iot.Device.Graphics;
 using Iot.Device.Ws28xx;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Device.Spi;
 using System.IO;
@@ -9,18 +11,22 @@ namespace ws2812
 {
     class Program
     {
-        public const int count = 40;
+        public static int count = 40;
         public static SpiConnectionSettings settings;
         public static EStrip strip;
 
         public static Config config;
 
+        private static WebSocketServer server;
+
         static void Main(string[] args)
         {
+            
             string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.ini");
             config = new Config(configFilePath);
 
             strip = (EStrip)Convert.ToInt32(config.Read("Strip", "Type"));
+            count = Convert.ToInt32(config.Read("Strip", "Count"));
 
             settings = new SpiConnectionSettings(Convert.ToInt32(config.Read("SPI", "Bus")), Convert.ToInt32(config.Read("SPI", "Chip")))
             {
@@ -29,28 +35,24 @@ namespace ws2812
                 DataBitLength = 8
             };
 
-            var wssv = new WebSocketServer(Convert.ToInt32(config.Read("WebSocket", "Port")));
-            wssv.AddWebSocketService<Default>("/");
-            wssv.Start();
+            server = new WebSocketServer(Convert.ToInt32(config.Read("WebSocket", "Port")));
+            server.AddWebSocketService<Default>("/");
+            server.Start();
 
-            if (wssv.IsListening)
+            if (server.IsListening)
             {
-                Console.WriteLine("Listening on port {0}, and providing WebSocket services:", wssv.Port);
-                foreach (var path in wssv.WebSocketServices.Paths)
-                    Console.WriteLine("- {0}", path);
+                Console.WriteLine("Listening on port {0}, and providing WebSocket services:", server.Port);
             }
 
-            Console.WriteLine("\nPress Enter key to stop the server...");
-            Console.ReadLine();
+            CreateHostBuilder(args).Build().Run();            
+        }
 
-            wssv.Stop();
-            config.Dispose();
-            OnProcessExit();
-        }       
-
-        static void OnProcessExit()
+        public static void OnProcessExit()
         {
-            Console.WriteLine("Closing");
+            Console.WriteLine("OnProcessExit");
+
+            server.Stop();
+            config.Dispose();
 
             using (var spi = SpiDevice.Create(settings))
             {
@@ -59,8 +61,16 @@ namespace ws2812
                 image.Clear();
                 device.Update();
             }
-            Environment.Exit(0);
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseSystemd()
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<Worker>();
+                });
+    
 
         public enum EStrip
         {

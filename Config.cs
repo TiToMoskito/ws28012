@@ -58,6 +58,11 @@ namespace ws2812
             key.Comments.Add("RGB Type 0=RGB 1=RBG 2=GRB 3=GBR 4=BRG");
             key.Value = "0";
             data["Strip"].Add(key);
+
+            key = new Property("Count");
+            key.Comments.Add("How many LEDs do you have");
+            key.Value = "40";
+            data["Strip"].Add(key);
         }
 
         public void Write(string section, string key, string value)
