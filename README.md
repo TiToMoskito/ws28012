@@ -3,18 +3,22 @@
 ### Installing
 Please open a SSH shell. You do not need to use a root shell to install ws2812. If a normal unprivilidged user exists you should start the installation with this user. 
 
-Then execute
+`sudo apt-get update`
+`sudo apt-get install gcc make build-essential python-dev git scons swig`
+`sudo nano /etc/modprobe.d/snd-blacklist.conf`
+`blacklist snd_bcm2835`
+`sudo nano /boot/config.txt`
+Enable audio (loads snd_bcm2835)
+`dtparam=audio=on`
+`sudo reboot`
+`git clone https://github.com/jgarff/rpi_ws281x`
 
-`curl -sL http://titomoskito.com/ws2812/installer.sh | bash -`
-
-This will install ws2812 in 3 steps and show its progress:
-* Installing prerequisites (1/3)
-* Installing WS2812 (2/4)
-* Finalizing installation (3/4)
-
-At the end you should see
-
-`ws2812 was installed successfully`
+`cd rpi_ws281x/`
+`sudo scons`
+`cd python`
+`sudo python3 setup.py build`
+`sudo python3 setup.py install`
+`sudo pip3 install adafruit-circuitpython-neopixel`
 
 That's it :)
 
