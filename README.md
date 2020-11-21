@@ -14,13 +14,8 @@ Please open a SSH shell. You do not need to use a root shell to install ws2812. 
     sudo python3 setup.py build
     sudo python3 setup.py install
     sudo pip3 install adafruit-circuitpython-neopixel
-    
-    sudo nano /boot/config.txt
-
-#Enable audio (loads snd_bcm2835)
-`dtparam=audio=on`
-
-`sudo reboot`
+    sudo reboot
+  
 
 That's it :)
 
