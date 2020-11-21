@@ -19,6 +19,8 @@ Please open a SSH shell. You do not need to use a root shell to install ws2812. 
 Or use the automatic installer
 
     curl -sL http://titomoskito.com/ws2812/install.sh | sudo bash -
+    
+Set the Data Line to GPIO18
 
 That's it :)
 
