@@ -104,18 +104,15 @@ class WS2812Thread(object):
             #time.sleep(10)
         self.colorWipe(Color(0,0,0), 10)
 
-def new_client(client, server):
-    print("A new client has joined")
-
-def message_received(client, server, message):
+def messageReceived(client, server, message):
     #print(message)
     cmd = message.split(" ")   
-    new_color = Color(0,0,0)
+    newColor = Color(0,0,0)
 
     if len(cmd) > 1:
-        new_color = Color(int(cmd[1]), int(cmd[2]), int(cmd[3]))
+        newColor = Color(int(cmd[1]), int(cmd[2]), int(cmd[3]))
 
-    WS2812TH.changeVars(int(cmd[0]), new_color)
+    WS2812TH.changeVars(int(cmd[0]), newColor)
     
 
 # Main program logic follows:
@@ -126,6 +123,5 @@ if __name__ == '__main__':
     WS2812TH = WS2812Thread(0, Color(0, 0, 0), strip)
 
     server = WebsocketServer(80, host='0.0.0.0', loglevel=logging.INFO)
-    server.set_fn_new_client(new_client)
-    server.set_fn_message_received(message_received)
+    server.set_fn_message_received(messageReceived)
     server.run_forever()
