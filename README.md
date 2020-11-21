@@ -16,6 +16,9 @@ Please open a SSH shell. You do not need to use a root shell to install ws2812. 
     sudo pip3 install adafruit-circuitpython-neopixel
     sudo reboot
   
+Or use the automatic installer
+
+    curl -sL http://titomoskito.com/ws2812/install.sh | sudo bash -
 
 That's it :)
 
