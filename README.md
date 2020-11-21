@@ -1,4 +1,5 @@
 
+
 # WS2812
 
 ### Installing
@@ -20,7 +21,9 @@ Or use the automatic installer
 
     curl -sL http://titomoskito.com/ws2812/install.sh | sudo bash -
     
+### GPIO
 Set the Data Line to GPIO18
+![enter image description here](http://titomoskito.com/ws2812/gpio.png)
 
 That's it :)
 
